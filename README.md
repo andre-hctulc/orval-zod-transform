@@ -20,11 +20,11 @@ This uses the default suffixes `Schema` and `Type`.
 **Use custom suffixes**
 
 ```bash
-orval-zod-transform src/schemas/**/*.ts --type-suffix Contract --schema-suffix Contract
+npx orval-zod-transform src/schemas/**/*.ts --type-suffix Contract --schema-suffix Contract
 ```
 
 ## Help
 
 ```bash
-orval-zod-transform --help
+npx orval-zod-transform --help
 ```
