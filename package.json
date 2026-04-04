@@ -1,5 +1,5 @@
 {
-    "name": "@dre44/orval-zod-transform",
+    "name": "orval-zod-transform",
     "version": "0.0.1",
     "description": "",
     "main": "dist/index.js",
@@ -15,12 +15,15 @@
         "tc": "tsc --noEmit",
         "tc:watch": "tsc --noEmit --watch",
         "prebuild": "rm -rf dist",
-        "build": "tsc"
+        "build": "tsc",
+        "test:prepare": "orval --config test/orval.config.ts",
+        "test": "tsx src/cli.ts test/out/**/*.ts"
     },
     "author": "André Thomas",
     "license": "ISC",
     "devDependencies": {
-        "@types/node": "^24.1.0"
+        "@types/node": "^24.1.0",
+        "orval": "^7.13.2"
     },
     "dependencies": {
         "commander": "^14.0.3",
