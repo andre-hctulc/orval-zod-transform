@@ -12,6 +12,8 @@ program
     .option("-T --type-suffix <suffix>", "Suffix for inferred type exports", "Type")
     .option("-S --schema-suffix <suffix>", "Suffix for schema variable names", "Schema")
     .action((files: string | string[], options) => {
+        console.log("⚙️ Transforming zod schemas...");
+
         try {
             transform(files, {
                 typeSuffix: options.typeSuffix,

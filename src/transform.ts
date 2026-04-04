@@ -10,8 +10,6 @@ export function transform(inputGlob: string | string[], { typeSuffix, schemaSuff
 
     project.addSourceFilesAtPaths(inputGlob);
 
-    console.log("Transforming generated schemas...");
-
     const schemaSuff = schemaSuffix ?? "Schema";
     const typeSuff = typeSuffix ?? "Type";
 
