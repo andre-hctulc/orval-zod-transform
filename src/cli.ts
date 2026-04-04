@@ -25,7 +25,6 @@ program
             console.error("❌ Error during zod schema transformation:", error);
             process.exit(1);
         }
-    })
-    .description("Transform generated schemas to add type exports and rename schema variables");
+    });
 
 program.parse();

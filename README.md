@@ -10,7 +10,7 @@ Orval does not support this for zod clients.
 ```json
 {
     "scripts": {
-        "orval:gen": "orval && npx orval-zod-transform -i src/schemas/**/*.ts"
+        "orval:gen": "orval && npx orval-zod-transform src/schemas/**/*.ts"
     }
 }
 ```
@@ -20,7 +20,7 @@ This uses the default suffixes `Schema` and `Type`.
 **Use custom suffixes**
 
 ```bash
-orval-zod-transform -i src/schemas/**/*.ts --type-suffix Contract --schema-suffix Contract
+orval-zod-transform src/schemas/**/*.ts --type-suffix Contract --schema-suffix Contract
 ```
 
 ## Help
