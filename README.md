@@ -1,0 +1,30 @@
+# orval-zod-transform
+
+## Why?
+
+We want to generate zod schemas and inferred types with different suffixes.
+Orval does not support this for zod clients.
+
+## Usage
+
+```json
+{
+    "scripts": {
+        "orval:gen": "orval && npx orval-zod-transform -i src/schemas/**/*.ts"
+    }
+}
+```
+
+This uses the default suffixes `Schema` and `Type`.
+
+**Use custom suffixes**
+
+```bash
+orval-zod-transform -i src/schemas/**/*.ts --type-suffix Contract --schema-suffix Contract
+```
+
+## Help
+
+```bash
+orval-zod-transform --help
+```

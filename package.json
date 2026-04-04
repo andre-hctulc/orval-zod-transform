@@ -1,0 +1,30 @@
+{
+    "name": "@dre44/orval-zod-transform",
+    "version": "0.0.1",
+    "description": "",
+    "main": "dist/index.js",
+    "type": "module",
+    "bin": {
+        "orval-zod-transform": "dist/cli.js"
+    },
+    "repository": {
+        "type": "git",
+        "url": "https://github.com/andre-hctulc/orval-zod-transform.git"
+    },
+    "scripts": {
+        "tc": "tsc --noEmit",
+        "tc:watch": "tsc --noEmit --watch",
+        "prebuild": "rm -rf dist",
+        "build": "tsc"
+    },
+    "author": "André Thomas",
+    "license": "ISC",
+    "devDependencies": {
+        "@types/node": "^24.1.0"
+    },
+    "dependencies": {
+        "commander": "^14.0.3",
+        "ts-morph": "^27.0.2",
+        "zod": "^4.3.6"
+    }
+}
