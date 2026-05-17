@@ -11,8 +11,9 @@ program
     .argument("<files...>", 'File patterns to transform (e.g., "src/**/*.ts" "lib/**/*.ts")')
     .option("-T --type-suffix <suffix>", "Suffix for inferred type exports", "Type")
     .option("-S --schema-suffix <suffix>", "Suffix for schema variable names", "Schema")
+    .option("-L --log-level <level>", "Log level (e.g., info, debug, error)", "info")
     .action((files: string | string[], options) => {
-        console.log("⚙️ Transforming zod schemas...");
+        console.log("⚙️  Transforming zod schemas...");
 
         try {
             transform(files, {

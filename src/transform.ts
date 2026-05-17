@@ -1,11 +1,16 @@
 import { Project } from "ts-morph";
+import { logWithLevel } from "./helpers.js";
 
 interface TransformOptions {
     typeSuffix?: string;
     schemaSuffix?: string;
+    logLevel?: string;
 }
 
-export function transform(inputGlob: string | string[], { typeSuffix, schemaSuffix }: TransformOptions = {}) {
+export function transform(
+    inputGlob: string | string[],
+    { typeSuffix, schemaSuffix, logLevel }: TransformOptions = {},
+) {
     const project = new Project();
 
     project.addSourceFilesAtPaths(inputGlob);
@@ -17,11 +22,20 @@ export function transform(inputGlob: string | string[], { typeSuffix, schemaSuff
         // Find zod import to determine the correct namespace
         const zodImport = file.getImportDeclaration((i) => i.getModuleSpecifierValue() === "zod");
 
-        if (!zodImport) continue; // Skip files without zod imports
+        if (!zodImport) {
+            logWithLevel(logLevel, "debug", `Skipping file: ${file.getBaseName()} (no zod import found)`);
+            continue; // Skip files without zod imports
+        }
 
         // Determine how zod is imported (zod., z., or destructured)
         const zodNamespace =
             zodImport.getNamespaceImport()?.getText() || zodImport.getDefaultImport()?.getText() || "z";
+
+        logWithLevel(
+            logLevel,
+            "debug",
+            `Processing file: ${file.getBaseName()} with zod namespace: ${zodNamespace}`,
+        );
 
         const exportedVars = file.getVariableStatements().filter((v) => v.isExported());
 
@@ -30,10 +44,14 @@ export function transform(inputGlob: string | string[], { typeSuffix, schemaSuff
                 const originalName = decl.getName();
 
                 // Skip if already renamed
-                if (originalName.endsWith(schemaSuff)) continue;
+                if (originalName.endsWith(schemaSuff)) {
+                    continue;
+                }
 
                 const initializer = decl.getInitializer();
-                if (!initializer) continue;
+                if (!initializer) {
+                    continue;
+                }
 
                 const text = initializer.getText();
 
@@ -43,31 +61,39 @@ export function transform(inputGlob: string | string[], { typeSuffix, schemaSuff
                     text.includes("object(") ||
                     text.includes("string(") ||
                     text.includes("number(") ||
-                    text.includes("array(");
+                    text.includes("array(") ||
+                    text.includes("enum(");
 
-                if (!hasZodPattern) continue;
+                if (!hasZodPattern) {
+                    continue;
+                }
 
-                const schemaName = `${originalName}${schemaSuff}`;
+                const newSchemaName = `${originalName}${schemaSuff}`;
 
                 // Rename variable (this updates references too)
-                decl.rename(schemaName);
+                decl.rename(newSchemaName);
+                logWithLevel(
+                    logLevel,
+                    "info",
+                    `Renamed ${originalName} to ${newSchemaName} in file: ${file.getBaseName()}`,
+                );
 
-                const typeAliasName = `${originalName}${typeSuff}`;
+                const newTypeName = `${originalName}${typeSuff}`;
 
                 // Add inferred type if it doesn't exist and doesn't conflict
-                const existingType = file.getTypeAlias(typeAliasName);
+                const existingType = file.getTypeAlias(newTypeName);
                 const existingDeclaration = file.getStatements().find(
                     (s) =>
-                        (s.getKind() === 267 && (s as any).getName?.() === typeAliasName) || // VariableStatement
-                        (s.getKind() === 261 && (s as any).getName?.() === typeAliasName) || // FunctionDeclaration
-                        (s.getKind() === 262 && (s as any).getName?.() === typeAliasName), // ClassDeclaration
+                        (s.getKind() === 267 && (s as any).getName?.() === newTypeName) || // VariableStatement
+                        (s.getKind() === 261 && (s as any).getName?.() === newTypeName) || // FunctionDeclaration
+                        (s.getKind() === 262 && (s as any).getName?.() === newTypeName), // ClassDeclaration
                 );
 
                 if (!existingType && !existingDeclaration) {
                     file.addTypeAlias({
-                        name: typeAliasName,
+                        name: newTypeName,
                         isExported: true,
-                        type: `${zodNamespace}.infer<typeof ${schemaName}>`,
+                        type: `${zodNamespace}.infer<typeof ${newSchemaName}>`,
                     });
                 }
             }
