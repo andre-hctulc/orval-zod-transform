@@ -1,6 +1,7 @@
 #!/usr/bin/env node
 import { Command } from "commander";
 import { transform } from "./transform.js";
+import { logWithLevel } from "./helpers.js";
 
 const program = new Command();
 
@@ -13,17 +14,18 @@ program
     .option("-S --schema-suffix <suffix>", "Suffix for schema variable names", "Schema")
     .option("-L --log-level <level>", "Log level (e.g., info, debug, error)", "info")
     .action((files: string | string[], options) => {
-        console.log("⚙️  Transforming zod schemas...");
+        logWithLevel(options.logLevel, "info", "Transforming zod schemas...");
 
         try {
             transform(files, {
                 typeSuffix: options.typeSuffix,
                 schemaSuffix: options.schemaSuffix,
+                logLevel: options.logLevel,
             });
 
-            console.log("✅ Transformed zod schemas!");
+            logWithLevel(options.logLevel, "info", "Transformed zod schemas!");
         } catch (error) {
-            console.error("❌ Error during zod schema transformation:", error);
+            logWithLevel(options.logLevel, "error", "Error during zod schema transformation:", error);
             process.exit(1);
         }
     });

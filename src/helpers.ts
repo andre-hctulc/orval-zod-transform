@@ -1,6 +1,6 @@
 import { log } from "console";
 
-export function logWithLevel(currentLevel: string | undefined, level: string, ...message: string[]) {
+export function logWithLevel(currentLevel: string | undefined, level: string, ...message: any[]) {
     if (!currentLevel) {
         currentLevel = "info"; // Default log level
     }
@@ -15,9 +15,9 @@ export function logWithLevel(currentLevel: string | undefined, level: string, ..
     }
 
     const prefix = {
-        debug: "🐛 [DEBUG]",
-        info: "ℹ️  [INFO]",
-        error: "❌ [ERROR]",
+        debug: "[DEBUG]",
+        info: "[INFO] ",
+        error: "[ERROR]",
     }[level];
 
     log(prefix, ...message);
