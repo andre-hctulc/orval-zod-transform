@@ -74,7 +74,7 @@ export function transform(
                 decl.rename(newSchemaName);
                 logWithLevel(
                     logLevel,
-                    "info",
+                    "debug",
                     `Renamed ${originalName} to ${newSchemaName} in file: ${file.getBaseName()}`,
                 );
 

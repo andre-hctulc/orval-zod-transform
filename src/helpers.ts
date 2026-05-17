@@ -16,7 +16,7 @@ export function logWithLevel(currentLevel: string | undefined, level: string, ..
 
     const prefix = {
         debug: "🐛 [DEBUG]",
-        info: "ℹ [INFO]",
+        info: "ℹ️  [INFO]",
         error: "❌ [ERROR]",
     }[level];
 
